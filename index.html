@@ -150,6 +150,19 @@
         .weather-icon { font-size: 1.8rem; }
         .humidity, .wind { font-size: 0.85rem; color: #CFE6F0; }
         .weather-update { font-size: 0.65rem; color: #9ebbc6; margin-top: 8px; text-align: right; }
+        
+        .local-time {
+            font-size: 0.75rem;
+            color: #FFE1A0;
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
 
         .flight-label {
             font-size: clamp(1.6rem, 7vw, 2.6rem);
@@ -299,6 +312,7 @@
                 <div class="humidity" id="moscowHumidity">💧 Влажность: --%</div>
                 <div class="wind" id="moscowWind">🌬️ Ветер: -- м/с</div>
             </div>
+            <div class="local-time" id="moscowLocalTime">🕐 Местное время: --:--:--</div>
             <div class="weather-update" id="moscowUpdate">Обновляется...</div>
         </div>
         <div class="weather-card">
@@ -314,6 +328,7 @@
                 <div class="humidity" id="sanyaHumidity">💧 Влажность: --%</div>
                 <div class="wind" id="sanyaWind">🌬️ Ветер: -- м/с</div>
             </div>
+            <div class="local-time" id="sanyaLocalTime">🕐 Местное время: --:--:--</div>
             <div class="weather-update" id="sanyaUpdate">Обновляется...</div>
         </div>
     </div>
@@ -335,7 +350,7 @@
         </div>
         <div style="text-align: center; margin-top: 1rem; font-size: 0.75rem; color: #d4f1f9;">🙌 Время не ждёт — действуйте!</div>
     </div>
-    <footer>🌈 Фон переливается радугой • Погода: AccuWeather (реальная, обновляется каждый час)</footer>
+    <footer>🌈 Фон переливается радугой • Погода: AccuWeather (обновляется каждый час) • Местное время обновляется каждую секунду</footer>
 </div>
 
 <script>
@@ -379,12 +394,30 @@
         setInterval(updateTimer, 1000);
     })();
 
+    // ==================== МЕСТНОЕ ВРЕМЯ (правильные часовые пояса) ====================
+    // Москва: UTC+3 (MSK)
+    // Санья: UTC+8 (Китай, CST)
+    
+    function updateLocalTime() {
+        const now = new Date();
+        
+        // Москва: UTC+3 (прибавляем 3 часа к UTC)
+        const moscowTime = new Date(now.getTime() + (3 * 60 * 60 * 1000));
+        const moscowStr = moscowTime.toISOString().slice(11, 19);
+        document.getElementById('moscowLocalTime').innerHTML = `🕐 Местное время: ${moscowStr}`;
+        
+        // Санья: UTC+8 (прибавляем 8 часов к UTC)
+        const sanyaTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+        const sanyaStr = sanyaTime.toISOString().slice(11, 19);
+        document.getElementById('sanyaLocalTime').innerHTML = `🕐 Местное время: ${sanyaStr}`;
+    }
+    
+    updateLocalTime();
+    setInterval(updateLocalTime, 1000);
+
     // ==================== ПОГОДА ACCUWEATHER ====================
     const ACCUWEATHER_API_KEY = "zpka_98fde72682c54568894284a632a8d316_99646455";
     
-    // ПРАВИЛЬНЫЕ Location Keys:
-    // Москва: 294021
-    // Санья (остров Хайнань): 58646 ✅
     const locations = {
         moscow: { name: "Москва", locationKey: "294021", demo: { temp: 3, icon: "☁️", text: "Облачно", humidity: 78, wind: 4 } },
         sanya: { name: "Санья", locationKey: "58646", demo: { temp: 28, icon: "☀️", text: "Солнечно", humidity: 70, wind: 3 } }
@@ -440,7 +473,6 @@
             
         } catch (error) {
             console.error(`Ошибка для ${cityData.name}:`, error);
-            // Демо-погода
             const demo = cityData.demo;
             elements.temp.innerHTML = `${demo.temp}°C`;
             elements.icon.innerHTML = demo.icon;

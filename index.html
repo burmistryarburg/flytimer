@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Таймер до вылета | Москва ✈️ Санья | 29 марта 2026</title>
+    <title>Таймер до вылета | Москва ✈️ Санья | ИИ GigaChat</title>
     <style>
         * {
             margin: 0;
@@ -49,28 +49,9 @@
             animation: liquidFlow 18s ease-in-out infinite;
         }
 
-        body::after {
-            content: "";
-            position: fixed;
-            top: -30%;
-            left: -20%;
-            width: 150%;
-            height: 150%;
-            background: radial-gradient(ellipse at 70% 40%, rgba(210,240,255,0.08) 0%, rgba(80,140,160,0.03) 70%);
-            pointer-events: none;
-            z-index: 0;
-            animation: liquidShift 22s ease-in-out infinite alternate;
-        }
-
         @keyframes liquidFlow {
             0% { transform: translate(0%, 0%) rotate(0deg); opacity: 0.5; }
-            50% { transform: translate(5%, 3%) rotate(2deg); opacity: 0.8; }
-            100% { transform: translate(-2%, -1%) rotate(-1deg); opacity: 0.5; }
-        }
-
-        @keyframes liquidShift {
-            0% { transform: scale(1) translate(0%, 0%); opacity: 0.3; }
-            100% { transform: scale(1.08) translate(-3%, 2%); opacity: 0.6; }
+            100% { transform: translate(5%, 3%) rotate(2deg); opacity: 0.8; }
         }
 
         .main-wrapper {
@@ -84,7 +65,7 @@
             gap: 1.6rem;
         }
 
-        .glass-card, .weather-card, .faq-section {
+        .glass-card, .weather-card, .faq-section, .ai-card {
             background: rgba(18, 45, 55, 0.55);
             backdrop-filter: blur(16px);
             border-radius: 2rem;
@@ -104,10 +85,7 @@
             background: rgba(10, 35, 45, 0.7);
             transition: transform 0.2s;
         }
-        .weather-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(255, 200, 100, 0.8);
-        }
+        .weather-card:hover { transform: translateY(-3px); }
         .weather-header {
             display: flex;
             align-items: center;
@@ -150,7 +128,6 @@
         .weather-icon { font-size: 1.8rem; }
         .humidity, .wind { font-size: 0.85rem; color: #CFE6F0; }
         .weather-update { font-size: 0.65rem; color: #9ebbc6; margin-top: 8px; text-align: right; }
-        
         .local-time {
             font-size: 0.75rem;
             color: #FFE1A0;
@@ -159,9 +136,6 @@
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
             margin-top: 10px;
-            text-align: center;
-            font-weight: 500;
-            letter-spacing: 0.5px;
         }
 
         .flight-label {
@@ -171,8 +145,6 @@
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            margin-bottom: 0.8rem;
-            text-transform: uppercase;
             text-align: center;
         }
 
@@ -233,11 +205,9 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            padding: 4px 0;
-            transition: 0.2s;
         }
-        .faq-question:hover { transform: translateX(5px); color: #FFECB3; }
-        .faq-question-icon { font-size: 1.3rem; transition: transform 0.35s; display: inline-block; }
+        .faq-question:hover { transform: translateX(5px); }
+        .faq-question-icon { font-size: 1.3rem; transition: transform 0.35s; }
         .faq-question.open .faq-question-icon { transform: rotate(90deg); }
         .faq-answer {
             font-size: 0.95rem;
@@ -274,12 +244,38 @@
             .weather-row { flex-direction: column; }
             .time-unit { min-width: 70px; }
         }
-        .urgent .number {
-            animation: gentlePulse 0.9s infinite alternate;
+
+        /* Кнопка ИИ */
+        .ai-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD97C, #FFB347);
+            color: #1a2f38;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            width: 100%;
         }
-        @keyframes gentlePulse {
-            0% { text-shadow: 0 0 0px #ffc978; }
-            100% { text-shadow: 0 0 8px #ffbc4a; }
+        .ai-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .ai-card {
+            text-align: center;
+        }
+        .ai-card h3 {
+            color: #FFE5B4;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .ai-card p {
+            color: #CFE6F0;
+            margin-bottom: 1.2rem;
         }
     </style>
 </head>
@@ -294,43 +290,33 @@
             <div class="time-unit"><div class="number" id="minsNum">--</div><div class="unit-text">Минут</div></div>
             <div class="time-unit"><div class="number" id="secsNum">--</div><div class="unit-text">Секунд</div></div>
         </div>
-        <div class="info-note">🕒 29 марта 2026 • 15:55 МСК (Москва) → Санья, остров Хайнань</div>
+        <div class="info-note">🕒 29 марта 2026 • 15:55 МСК → Санья, остров Хайнань</div>
     </div>
 
-    <!-- Погода AccuWeather -->
+    <!-- Погода -->
     <div class="weather-row">
         <div class="weather-card">
-            <div class="weather-header">
-                <div class="city-name"><span>🏙️</span> Москва (вылет)</div>
-                <div class="weather-temp" id="moscowTemp">-- °C</div>
-            </div>
-            <div class="weather-details">
-                <div class="weather-condition">
-                    <span class="weather-icon" id="moscowIcon">☁️</span>
-                    <span id="moscowDesc">Загрузка...</span>
-                </div>
-                <div class="humidity" id="moscowHumidity">💧 Влажность: --%</div>
-                <div class="wind" id="moscowWind">🌬️ Ветер: -- м/с</div>
-            </div>
+            <div class="weather-header"><div class="city-name"><span>🏙️</span> Москва</div><div class="weather-temp" id="moscowTemp">-- °C</div></div>
+            <div class="weather-details"><div class="weather-condition"><span class="weather-icon" id="moscowIcon">☁️</span><span id="moscowDesc">Загрузка...</span></div><div class="humidity" id="moscowHumidity">💧 --%</div><div class="wind" id="moscowWind">🌬️ -- м/с</div></div>
             <div class="local-time" id="moscowLocalTime">🕐 Местное время: --:--:--</div>
             <div class="weather-update" id="moscowUpdate">Обновляется...</div>
         </div>
         <div class="weather-card">
-            <div class="weather-header">
-                <div class="city-name"><span>🏝️</span> Санья, Хайнань (прибытие)</div>
-                <div class="weather-temp" id="sanyaTemp">-- °C</div>
-            </div>
-            <div class="weather-details">
-                <div class="weather-condition">
-                    <span class="weather-icon" id="sanyaIcon">☁️</span>
-                    <span id="sanyaDesc">Загрузка...</span>
-                </div>
-                <div class="humidity" id="sanyaHumidity">💧 Влажность: --%</div>
-                <div class="wind" id="sanyaWind">🌬️ Ветер: -- м/с</div>
-            </div>
+            <div class="weather-header"><div class="city-name"><span>🏝️</span> Санья, Хайнань</div><div class="weather-temp" id="sanyaTemp">-- °C</div></div>
+            <div class="weather-details"><div class="weather-condition"><span class="weather-icon" id="sanyaIcon">☁️</span><span id="sanyaDesc">Загрузка...</span></div><div class="humidity" id="sanyaHumidity">💧 --%</div><div class="wind" id="sanyaWind">🌬️ -- м/с</div></div>
             <div class="local-time" id="sanyaLocalTime">🕐 Местное время: --:--:--</div>
             <div class="weather-update" id="sanyaUpdate">Обновляется...</div>
         </div>
+    </div>
+
+    <!-- ИИ-помощник GigaChat (без регистрации!) -->
+    <div class="ai-card">
+        <h3>🤖 ИИ-помощник GigaChat</h3>
+        <p>Нейросеть от Сбера. Отвечает на любые вопросы: математика, физика, история, программирование, путешествия и многое другое! <strong>Без регистрации!</strong></p>
+        <button class="ai-button" onclick="window.open('https://giga.chat', '_blank')">
+            💬 Открыть GigaChat
+        </button>
+        <div class="info-note" style="margin-top: 1rem;">🔓 Откроется в новой вкладке • Бесплатно • Без регистрации</div>
     </div>
 
     <!-- FAQ -->
@@ -348,9 +334,9 @@
             </div>
             <div class="faq-answer">Активно собирать чемоданы, старательно писать списки, усердно работать.</div>
         </div>
-        <div style="text-align: center; margin-top: 1rem; font-size: 0.75rem; color: #d4f1f9;">🙌 Время не ждёт — действуйте!</div>
+        <div style="text-align: center; margin-top: 1rem; color: #d4f1f9;">🙌 Время не ждёт — действуйте!</div>
     </div>
-    <footer>🌈 Фон переливается радугой • Погода: AccuWeather (обновляется каждый час) • Местное время обновляется каждую секунду</footer>
+    <footer>🌈 Фон переливается радугой • Погода: AccuWeather • ИИ: GigaChat (бесплатно, без регистрации)</footer>
 </div>
 
 <script>
@@ -361,156 +347,68 @@
         const hoursElem = document.getElementById('hoursNum');
         const minsElem = document.getElementById('minsNum');
         const secsElem = document.getElementById('secsNum');
-        const container = document.querySelector('.countdown-container');
-        
         function updateTimer() {
             const diff = targetDate - new Date();
-            if (diff <= 0) {
-                daysElem.textContent = '0';
-                hoursElem.textContent = '00';
-                minsElem.textContent = '00';
-                secsElem.textContent = '00';
-                if (container) container.classList.remove('urgent');
-                return;
-            }
+            if (diff <= 0) { daysElem.textContent = '0'; hoursElem.textContent = '00'; minsElem.textContent = '00'; secsElem.textContent = '00'; return; }
             const seconds = Math.floor(diff / 1000);
-            const days = Math.floor(seconds / 86400);
-            const hours = Math.floor((seconds % 86400) / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            
-            daysElem.textContent = days;
-            hoursElem.textContent = hours.toString().padStart(2, '0');
-            minsElem.textContent = minutes.toString().padStart(2, '0');
-            secsElem.textContent = secs.toString().padStart(2, '0');
-            
-            if (seconds <= 300 && seconds > 0) {
-                container.classList.add('urgent');
-            } else {
-                container.classList.remove('urgent');
-            }
+            daysElem.textContent = Math.floor(seconds / 86400);
+            hoursElem.textContent = Math.floor((seconds % 86400) / 3600).toString().padStart(2, '0');
+            minsElem.textContent = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+            secsElem.textContent = (seconds % 60).toString().padStart(2, '0');
         }
         updateTimer();
         setInterval(updateTimer, 1000);
     })();
 
-    // ==================== МЕСТНОЕ ВРЕМЯ (правильные часовые пояса) ====================
-    // Москва: UTC+3 (MSK)
-    // Санья: UTC+8 (Китай, CST)
-    
+    // ==================== МЕСТНОЕ ВРЕМЯ ====================
     function updateLocalTime() {
         const now = new Date();
-        
-        // Москва: UTC+3 (прибавляем 3 часа к UTC)
         const moscowTime = new Date(now.getTime() + (3 * 60 * 60 * 1000));
-        const moscowStr = moscowTime.toISOString().slice(11, 19);
-        document.getElementById('moscowLocalTime').innerHTML = `🕐 Местное время: ${moscowStr}`;
-        
-        // Санья: UTC+8 (прибавляем 8 часов к UTC)
         const sanyaTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
-        const sanyaStr = sanyaTime.toISOString().slice(11, 19);
-        document.getElementById('sanyaLocalTime').innerHTML = `🕐 Местное время: ${sanyaStr}`;
+        document.getElementById('moscowLocalTime').innerHTML = `🕐 Местное время: ${moscowTime.toISOString().slice(11, 19)}`;
+        document.getElementById('sanyaLocalTime').innerHTML = `🕐 Местное время: ${sanyaTime.toISOString().slice(11, 19)}`;
     }
-    
     updateLocalTime();
     setInterval(updateLocalTime, 1000);
 
     // ==================== ПОГОДА ACCUWEATHER ====================
     const ACCUWEATHER_API_KEY = "zpka_98fde72682c54568894284a632a8d316_99646455";
-    
-    const locations = {
-        moscow: { name: "Москва", locationKey: "294021", demo: { temp: 3, icon: "☁️", text: "Облачно", humidity: 78, wind: 4 } },
-        sanya: { name: "Санья", locationKey: "58646", demo: { temp: 28, icon: "☀️", text: "Солнечно", humidity: 70, wind: 3 } }
-    };
-    
-    const iconMap = {
-        1: "☀️", 2: "☀️", 3: "⛅", 4: "⛅", 5: "☁️", 6: "☁️",
-        7: "☁️", 8: "☁️", 11: "🌫️", 12: "🌧️", 13: "🌧️", 14: "🌦️",
-        15: "⛈️", 16: "⛈️", 17: "⛈️", 18: "🌧️", 19: "🌨️", 20: "🌨️",
-        21: "🌨️", 22: "❄️", 23: "❄️", 24: "🌧️", 25: "🌧️", 26: "🌧️",
-        29: "🌨️", 30: "🔥", 31: "❄️", 32: "🌬️"
-    };
-    
-    async function fetchAccuWeather(cityKey, cityData) {
-        const elements = {
-            temp: document.getElementById(`${cityKey}Temp`),
-            icon: document.getElementById(`${cityKey}Icon`),
-            desc: document.getElementById(`${cityKey}Desc`),
-            humidity: document.getElementById(`${cityKey}Humidity`),
-            wind: document.getElementById(`${cityKey}Wind`),
-            update: document.getElementById(`${cityKey}Update`)
-        };
-        
-        if (!elements.temp) return;
-        
+    const locations = { moscow: { locationKey: "294021", demo: { temp: 3, icon: "☁️", text: "Облачно", humidity: 78, wind: 4 } }, sanya: { locationKey: "58646", demo: { temp: 28, icon: "☀️", text: "Солнечно", humidity: 70, wind: 3 } } };
+    const iconMap = { 1: "☀️", 2: "☀️", 3: "⛅", 4: "⛅", 5: "☁️", 6: "☁️", 7: "☁️", 8: "☁️", 11: "🌫️", 12: "🌧️", 13: "🌧️", 14: "🌦️", 15: "⛈️", 16: "⛈️", 17: "⛈️", 18: "🌧️", 19: "🌨️", 20: "🌨️", 21: "🌨️", 22: "❄️", 23: "❄️", 24: "🌧️", 25: "🌧️", 26: "🌧️", 29: "🌨️", 30: "🔥", 31: "❄️", 32: "🌬️" };
+    async function fetchWeather(cityKey, cityData) {
+        const e = { temp: document.getElementById(`${cityKey}Temp`), icon: document.getElementById(`${cityKey}Icon`), desc: document.getElementById(`${cityKey}Desc`), humidity: document.getElementById(`${cityKey}Humidity`), wind: document.getElementById(`${cityKey}Wind`), update: document.getElementById(`${cityKey}Update`) };
         try {
             const url = `https://dataservice.accuweather.com/currentconditions/v1/${cityData.locationKey}?apikey=${ACCUWEATHER_API_KEY}&language=ru&details=true`;
-            const response = await fetch(url);
-            
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            
-            const data = await response.json();
-            
-            if (!data || data.length === 0) throw new Error("Нет данных");
-            
-            const weather = data[0];
-            const temp = Math.round(weather.Temperature.Metric.Value);
-            const weatherText = weather.WeatherText;
-            const iconCode = weather.WeatherIcon;
-            const humidity = weather.RelativeHumidity || 70;
-            const windSpeed = weather.Wind.Speed ? Math.round(weather.Wind.Speed.Metric.Value * 10) / 10 : 0;
-            
-            elements.temp.innerHTML = `${temp}°C`;
-            elements.icon.innerHTML = iconMap[iconCode] || "🌡️";
-            elements.desc.innerHTML = weatherText;
-            elements.humidity.innerHTML = `💧 Влажность: ${humidity}%`;
-            elements.wind.innerHTML = `🌬️ Ветер: ${windSpeed} м/с`;
-            
-            const now = new Date();
-            elements.update.innerHTML = `🔄 обновлено ${now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`;
-            
-            console.log(`${cityData.name}: ${temp}°C, ${weatherText}`);
-            
-        } catch (error) {
-            console.error(`Ошибка для ${cityData.name}:`, error);
-            const demo = cityData.demo;
-            elements.temp.innerHTML = `${demo.temp}°C`;
-            elements.icon.innerHTML = demo.icon;
-            elements.desc.innerHTML = demo.text;
-            elements.humidity.innerHTML = `💧 Влажность: ${demo.humidity}%`;
-            elements.wind.innerHTML = `🌬️ Ветер: ${demo.wind} м/с`;
-            
-            const now = new Date();
-            elements.update.innerHTML = `🔄 ${now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`;
-        }
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error();
+            const data = await resp.json();
+            const w = data[0];
+            e.temp.innerHTML = `${Math.round(w.Temperature.Metric.Value)}°C`;
+            e.icon.innerHTML = iconMap[w.WeatherIcon] || "🌡️";
+            e.desc.innerHTML = w.WeatherText;
+            e.humidity.innerHTML = `💧 Влажность: ${w.RelativeHumidity || 70}%`;
+            e.wind.innerHTML = `🌬️ Ветер: ${w.Wind.Speed ? Math.round(w.Wind.Speed.Metric.Value * 10) / 10 : 0} м/с`;
+        } catch { const d = cityData.demo; e.temp.innerHTML = `${d.temp}°C`; e.icon.innerHTML = d.icon; e.desc.innerHTML = d.text; e.humidity.innerHTML = `💧 Влажность: ${d.humidity}%`; e.wind.innerHTML = `🌬️ Ветер: ${d.wind} м/с`; }
+        const now = new Date(); e.update.innerHTML = `🔄 обновлено ${now.toLocaleTimeString('ru-RU', { hour:'2-digit', minute:'2-digit' })}`;
     }
-    
-    async function updateAllWeather() {
-        await fetchAccuWeather("moscow", locations.moscow);
-        await fetchAccuWeather("sanya", locations.sanya);
-    }
-    
-    updateAllWeather();
-    setInterval(updateAllWeather, 3600000);
-    
+    fetchWeather("moscow", locations.moscow);
+    fetchWeather("sanya", locations.sanya);
+    setInterval(() => { fetchWeather("moscow", locations.moscow); fetchWeather("sanya", locations.sanya); }, 3600000);
+
     // ==================== FAQ ====================
-    function toggleAnswer(element) {
-        const faqItem = element.closest('.faq-item');
-        const answer = faqItem.querySelector('.faq-answer');
-        const icon = element.querySelector('.faq-question-icon');
-        
-        if (answer.classList.contains('open')) {
-            answer.classList.remove('open');
-            element.classList.remove('open');
-            if (icon) icon.innerHTML = '❓';
+    function toggleAnswer(el) {
+        const ans = el.parentElement.querySelector('.faq-answer');
+        const icon = el.querySelector('.faq-question-icon');
+        if (ans.classList.contains('open')) {
+            ans.classList.remove('open');
+            el.classList.remove('open');
+            if(icon) icon.innerHTML = '❓';
         } else {
-            answer.classList.add('open');
-            element.classList.add('open');
-            if (icon) icon.innerHTML = '🔽';
+            ans.classList.add('open');
+            el.classList.add('open');
+            if(icon) icon.innerHTML = '🔽';
         }
     }
-    
-    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
 </script>
 </body>
 </html>
